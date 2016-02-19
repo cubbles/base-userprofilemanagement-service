@@ -1,13 +1,13 @@
 module.exports = {
   users: {
     user1: {
-      _id: 'org.couchdb.user:profilemanagementtest123user1',
-      name: 'profilemanagementtest123user1',
-      displayName: 'user1.ptest',
-      email: 'user1.ptest@cubbles.test',
+      _id: 'org.couchdb.user:123profiletestuser1',
+      name: '123profiletestuser1',
+      displayName: 'Mr.Profiletestuser1',
+      email: 'profiletestuser1@cubbles.test',
       logins: {
         local: {
-          login: 'usertest1'
+          login: 'profiletestuser1'
         }
       },
       roles: [],

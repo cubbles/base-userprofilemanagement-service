@@ -10,7 +10,7 @@
 'use strict'
 var opts = {
   couchUrl: 'http://admin:admin@boot2docker.me:5984',
-  finallyRemoveTestData: false
+  finallyRemoveTestData: true
 }
 var request = require('superagent')
 var supercouch = require('supercouch')
@@ -86,11 +86,9 @@ after(function (done) {
   // remove testuser and test-database
 
   if (opts.finallyRemoveTestData) {
-    removeDocument('_users', testdata.users.admin1._id, function () {
-      removeDocument('_users', testdata.users.user1._id, function () {
-        runCompaction('_users', function () {
-          done()
-        })
+    removeDocument('_users', testdata.users.user1._id, function () {
+      runCompaction('_users', function () {
+        done()
       })
     })
   } else {
