@@ -13,6 +13,20 @@ module.exports = {
       roles: [],
       type: 'user',
       password: 'cubbles'
+    },
+    user2: {
+      _id: 'org.couchdb.user:123profiletestuser2',
+      name: '123profiletestuser2',
+      displayName: 'Mr.Profiletestuser2',
+      email: 'profiletestuser2@cubbles.test',
+      logins: {
+        local: {
+          login: 'profiletestuser2'
+        }
+      },
+      roles: [],
+      type: 'user',
+      password: 'cubbles'
     }
   }
 }

@@ -29,25 +29,36 @@ server.listen(opts.servicePort)
 console.log('%s - ' + opts.serviceName + ' started on port ' + opts.servicePort, (new Date()).toISOString())
 
 /*
- * health check
+ * Anonymous handlers
+ * ==================
  */
-server.get('/', function (req, res, next) {
-  res.json(200, { service: opts.serviceName, status: 'ok' })
-  next()
-})
-
-server.put('/users/:login/password', function (req, res, next) {
-  var passwordChanger = new PasswordChanger()
-
-  function onSuccess () {
-    res.json(200, { message: 'Password successfully changed.' })
+// heath check
+server.get('/',
+  function (req, res, next) {
+    res.json(200, { service: opts.serviceName, status: 'ok' })
     next()
-  }
-  function onRejected (err) {
-    console.log(err)
-    res.json(500, { message: err })
-  }
-  passwordChanger.changePassword(req.params.login, req.body.password, req.body.newPassword)
-    .done(onSuccess, onRejected)
-})
+  })
+
+/*
+ * Authentication and related handlers
+ * ====================================
+ */
+
+server.use(restify.authorizationParser())
+server.use(require('./lib/userDetector'))
+
+server.put('/users/:login/password',
+  function (req, res, next) {
+    var passwordChanger = new PasswordChanger()
+    passwordChanger.changePassword(req.cubxUserDoc, req.cubxUserPassword, req.body.newPassword)
+      .done(
+        function () {
+          res.json(200, { message: 'Password successfully changed.' })
+          next()
+        },
+        function (err) {
+          console.log(err)
+          res.json(500, { message: err })
+        })
+  })
 

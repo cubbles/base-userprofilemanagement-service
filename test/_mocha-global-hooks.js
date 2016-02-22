@@ -10,7 +10,7 @@
 'use strict'
 var opts = {
   couchUrl: 'http://admin:admin@boot2docker.me:5984',
-  finallyRemoveTestData: true
+  finallyRemoveTestData: process.env.REMOVE_TESTDATA ? JSON.parse(process.env.REMOVE_TESTDATA) : true
 }
 var request = require('superagent')
 var supercouch = require('supercouch')
@@ -37,7 +37,9 @@ before(function (done) {
 
   // add testuser and -groups
   addDocument('_users', testdata.users.user1, function () {
-    done()
+    addDocument('_users', testdata.users.user2, function () {
+      done()
+    })
   })
 }) // end "before"
 
@@ -87,8 +89,10 @@ after(function (done) {
 
   if (opts.finallyRemoveTestData) {
     removeDocument('_users', testdata.users.user1._id, function () {
-      runCompaction('_users', function () {
-        done()
+      removeDocument('_users', testdata.users.user2._id, function () {
+        runCompaction('_users', function () {
+          done()
+        })
       })
     })
   } else {
