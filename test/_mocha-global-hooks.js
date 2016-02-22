@@ -38,7 +38,9 @@ before(function (done) {
   // add testuser and -groups
   addDocument('_users', testdata.users.user1, function () {
     addDocument('_users', testdata.users.user2, function () {
-      done()
+      addDocument('_users', testdata.users.user3, function () {
+        done()
+      })
     })
   })
 }) // end "before"
@@ -90,8 +92,10 @@ after(function (done) {
   if (opts.finallyRemoveTestData) {
     removeDocument('_users', testdata.users.user1._id, function () {
       removeDocument('_users', testdata.users.user2._id, function () {
-        runCompaction('_users', function () {
-          done()
+        removeDocument('_users', testdata.users.user3._id, function () {
+          runCompaction('_users', function () {
+            done()
+          })
         })
       })
     })
